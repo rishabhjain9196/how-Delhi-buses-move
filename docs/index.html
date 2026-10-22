@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Delhi's Buses Move</title>
+<meta name="description" content="Six hours of live GPS from more than 6,000 Delhi city buses, turned into maps of busy and free roads, bunching patterns and an arrival-time model.">
+<style>
+:root {
+  --ink: #111827; --muted: #4b5563; --faint: #9ca3af; --line: #e5e7eb;
+  --bg: #f8fafc; --card: #ffffff; --night: #0b1220;
+  --red: #d73027; --amber: #f59e0b; --green: #1a9850; --blue: #2563eb;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+body { margin: 0; font: 17px/1.65 "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif; color: var(--ink); background: var(--bg); }
+a { color: var(--blue); }
+img { max-width: 100%; display: block; }
+
+/* Navigation */
+nav { position: sticky; top: 0; z-index: 10; background: rgba(11, 18, 32, 0.94); backdrop-filter: blur(6px); }
+nav .inner { max-width: 1160px; margin: auto; padding: 0 24px; display: flex; gap: 22px; align-items: center; overflow-x: auto; white-space: nowrap; height: 54px; scrollbar-width: none; }
+nav .inner::-webkit-scrollbar { display: none; }
+nav .brand { color: #fff; font-weight: 700; margin-right: 10px; text-decoration: none; }
+nav a.link { color: #cbd5e1; text-decoration: none; font-size: 14px; }
+nav a.link:hover { color: #fff; }
+
+/* Hero */
+header.hero { background: radial-gradient(1200px 500px at 85% 0%, rgba(215, 48, 39, 0.35), transparent 60%),
+                            radial-gradient(900px 500px at 10% 100%, rgba(26, 152, 80, 0.30), transparent 60%), var(--night);
+              color: #fff; padding: 84px 24px 72px; }
+header.hero .inner { max-width: 1160px; margin: auto; }
+.kicker { text-transform: uppercase; letter-spacing: 0.14em; font-size: 13px; color: #fca5a5; font-weight: 600; }
+header.hero h1 { font-size: clamp(40px, 6vw, 68px); line-height: 1.05; margin: 14px 0 18px; letter-spacing: -0.02em; }
+header.hero .lede { font-size: 21px; max-width: 760px; color: #d1d5db; margin: 0 0 40px; }
+.stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+.stat { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 14px; padding: 16px 18px; }
+.stat b { display: block; font-size: 28px; line-height: 1.15; white-space: nowrap; }
+.stat span { color: #cbd5e1; font-size: 14px; line-height: 1.4; display: block; margin-top: 4px; }
+.hero .actions { margin-top: 34px; display: flex; gap: 12px; flex-wrap: wrap; }
+.btn { display: inline-block; padding: 11px 18px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 15px; }
+.btn.primary { background: #fff; color: var(--night); }
+.btn.ghost { color: #fff; border: 1px solid rgba(255, 255, 255, 0.35); }
+
+/* Layout */
+main { max-width: 1160px; margin: auto; padding: 0 24px 40px; }
+section { padding: 64px 0 8px; }
+section > h2 { font-size: 34px; margin: 0 0 6px; letter-spacing: -0.01em; }
+.num { color: var(--faint); font-weight: 600; margin-right: 10px; }
+.intro { color: var(--muted); max-width: 780px; margin: 0 0 22px; font-size: 18px; }
+h3 { font-size: 22px; margin: 40px 0 10px; }
+
+/* Key findings */
+.findings { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-top: -36px; }
+.finding { background: var(--card); border-radius: 16px; padding: 22px 24px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08); border-top: 5px solid var(--blue); }
+.finding.red { border-color: var(--red); } .finding.amber { border-color: var(--amber); } .finding.green { border-color: var(--green); }
+.finding b { font-size: 34px; display: block; line-height: 1.1; margin-bottom: 6px; }
+.finding p { margin: 0; color: var(--muted); font-size: 15.5px; }
+
+/* Figures */
+figure { margin: 18px 0 8px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px; box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05); }
+figure a { display: block; cursor: zoom-in; }
+figure img { border-radius: 8px; margin: auto; }
+figure.map img { max-height: 900px; width: auto; }
+figcaption { color: var(--faint); font-size: 13px; padding: 10px 6px 0; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+/* Takeaways */
+ul.takeaways { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 10px; }
+ul.takeaways li { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--blue); border-radius: 10px; padding: 12px 16px; }
+ul.takeaways.red li { border-left-color: var(--red); }
+ul.takeaways.green li { border-left-color: var(--green); }
+ul.takeaways.amber li { border-left-color: var(--amber); }
+.howto { background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 12px; padding: 14px 18px; margin: 16px 0; font-size: 15.5px; }
+
+/* Tables */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 14px 0; border-radius: 12px; }
+.table-wrap table { margin: 0; min-width: 520px; }
+table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid var(--line); font-size: 15.5px; margin: 14px 0; }
+th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { background: #f1f5f9; font-size: 13.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+td.r, th.r { text-align: right; font-variant-numeric: tabular-nums; }
+tr:last-child td { border-bottom: none; }
+.best { font-weight: 700; color: var(--blue); }
+
+/* Method steps */
+.steps { counter-reset: step; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+.step { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; position: relative; }
+.step::before { counter-increment: step; content: counter(step); position: absolute; top: 16px; right: 18px; font-size: 26px; font-weight: 700; color: #e2e8f0; }
+.step b { display: block; margin-bottom: 4px; }
+.step span { color: var(--muted); font-size: 15px; }
+
+footer { background: var(--night); color: #cbd5e1; padding: 40px 24px; margin-top: 60px; font-size: 15px; }
+footer .inner { max-width: 1160px; margin: auto; display: grid; gap: 8px; }
+footer a { color: #fff; }
+
+@media (max-width: 1100px) { .stats { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 820px) {
+  .two { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .stats .stat:last-child { grid-column: span 2; }
+  header.hero { padding: 56px 20px 64px; }
+  section > h2 { font-size: 28px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="inner">
+    <a class="brand" href="#top">How Delhi's Buses Move</a>
+    <a class="link" href="#summary">Summary</a>
+    <a class="link" href="#data">Data</a>
+    <a class="link" href="#speed">Speed</a>
+    <a class="link" href="#slowest">Slowest stretches</a>
+    <a class="link" href="#bunching">Bunching</a>
+    <a class="link" href="#prediction">Prediction</a>
+    <a class="link" href="#since-2023">Since 2023</a>
+    <a class="link" href="#method">Method</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="inner">
+    <div class="kicker">Delhi Open Transit Data &nbsp;|&nbsp; Wednesday 21 October 2026, 6:23 pm to 12:23 am</div>
+    <h1>How Delhi's Buses Move</h1>
+    <p class="lede">Six hours of live GPS from more than 6,000 city buses, turned into maps of busy and free roads, bunching patterns and an arrival-time model.</p>
+    <div class="stats">
+      <div class="stat"><b>6,065</b><span>buses tracked</span></div>
+      <div class="stat"><b>5.1M</b><span>GPS positions</span></div>
+      <div class="stat"><b>8.6 km/h</b><span>median speed, 6 to 7 pm</span></div>
+      <div class="stat"><b>25 km/h</b><span>median speed after 11 pm</span></div>
+      <div class="stat"><b>1,421</b><span>live routes rebuilt</span></div>
+    </div>
+    <div class="actions">
+      <a class="btn primary" href="#summary">Read the findings</a>
+      <a class="btn ghost" href="https://github.com/rishabhjain9196/how-Delhi-buses-move/blob/main/notebooks/delhi_bus_analysis.ipynb">Open the notebook</a>
+      <a class="btn ghost" href="https://github.com/rishabhjain9196/how-Delhi-buses-move">View the code</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section id="summary" style="padding-top: 0">
+  <div class="findings">
+    <div class="finding red"><b>8.6 km/h</b><p>Typical bus speed at the 6 pm peak, about the pace of a brisk cyclist.</p></div>
+    <div class="finding amber"><b>45% to 14%</b><p>Share of bus roads slower than 15 km/h at the evening peak, falling by late night.</p></div>
+    <div class="finding red"><b>2.2 km/h</b><p>The slowest stretch: ISBT Anand Vihar to Maharaj Pur Check Post, on the Uttar Pradesh border.</p></div>
+    <div class="finding amber"><b>1 in 8</b><p>Gaps where a bus reached a stop within 2 minutes of the previous bus on the same route.</p></div>
+    <div class="finding"><b>14% and 24%</b><p>Arrival-time error cut by a LightGBM model against history, on familiar and unseen routes.</p></div>
+    <div class="finding green"><b>+23%</b><p>More evening trips on matched routes than the 2023 timetable planned.</p></div>
+  </div>
+</section>
+
+<section id="data">
+  <h2><span class="num">01</span>The data</h2>
+  <p class="intro">Delhi publishes a live feed of every city bus's position. It was polled every 10 seconds for six hours. Each response lists every bus with its position, route and trip.</p>
+
+  <figure><a href="figures/nb_fleet_on_road.png"><img src="figures/nb_fleet_on_road.png" alt="Number of buses in the live feed over the evening" loading="lazy"></a></figure>
+  <ul class="takeaways">
+    <li><b>Up to 5,681 buses</b> were on the road at once, around 7 pm.</li>
+    <li><b>The fleet thins steadily after 8 pm.</b> By midnight, only about 1,000 buses were still running.</li>
+    <li><b>About 6% of polls came back empty.</b> The longest run of empty responses was 30 seconds, so the gaps are short.</li>
+  </ul>
+
+  <h3>Where the buses went</h3>
+  <figure class="map"><a href="figures/nb_map_bus_traffic.png"><img src="figures/nb_map_bus_traffic.png" alt="Map of Delhi roads coloured by the number of buses using them" loading="lazy"></a></figure>
+  <ul class="takeaways">
+    <li><b>The busiest corridors</b> are the Ring Road, the Outer Ring Road and the radial roads out to Najafgarh, Narela and Badarpur.</li>
+    <li><b>The network is dense in the centre and thin at the edges.</b> Each outer area hangs off a few main roads.</li>
+  </ul>
+
+  <h3>Why the published timetable cannot answer these questions</h3>
+  <figure><a href="figures/nb_timetable_speeds.png"><img src="figures/nb_timetable_speeds.png" alt="Histogram of speeds implied by the 2023 timetable" loading="lazy"></a></figure>
+  <ul class="takeaways red">
+    <li><b>99.5% of scheduled stop-to-stop hops assume 14.5 to 15.5 km/h.</b> The portal confirms that timetable times are estimates based on a constant speed.</li>
+    <li><b>Only the live feed shows how fast buses really move.</b> The rest of this report uses it.</li>
+  </ul>
+</section>
+
+<section id="speed">
+  <h2><span class="num">02</span>Busy roads and free roads</h2>
+  <p class="intro">Speed is measured from consecutive GPS positions of moving buses. Buses parked at depots and terminals are excluded.</p>
+
+  <figure><a href="figures/nb_speed_timeline.png"><img src="figures/nb_speed_timeline.png" alt="Bus speed and speed bands every 15 minutes" loading="lazy"></a></figure>
+  <ul class="takeaways">
+    <li><b>From 6:15 to 7:30 pm, the typical bus moves at under 10 km/h.</b></li>
+    <li><b>Speed rises steadily after 8 pm</b> and passes 20 km/h by 10 pm.</li>
+    <li><b>Crawling time more than halves,</b> from 38% of moving time at 6:15 pm to 15% by midnight.</li>
+  </ul>
+
+  <h3>The same roads at the peak and late at night</h3>
+  <figure><a href="figures/nb_map_speed_peak_night.png"><img src="figures/nb_map_speed_peak_night.png" alt="Side-by-side maps of bus speeds at the evening peak and late at night" loading="lazy"></a></figure>
+  <ul class="takeaways amber">
+    <li><b>At the evening peak, 45% of bus roads run below 15 km/h.</b> Red and orange cover most of the city inside the Outer Ring Road.</li>
+    <li><b>By late night, that falls to 14%,</b> and the same roads turn green.</li>
+    <li><b>The outer radial roads stay green in both periods,</b> so congestion is concentrated in the built-up core.</li>
+  </ul>
+
+  <h3>Central Delhi up close</h3>
+  <figure><a href="figures/nb_map_central_peak.png"><img src="figures/nb_map_central_peak.png" alt="Detailed map of central Delhi bus speeds at the evening peak" loading="lazy"></a></figure>
+  <ul class="takeaways">
+    <li><b>Half of central bus roads run below 15 km/h at the peak.</b></li>
+    <li><b>Roads around Karol Bagh, Punjabi Bagh and Kashmere Gate are mostly red.</b> The wide avenues of New Delhi, between Connaught Place and AIIMS, stay mostly green.</li>
+  </ul>
+
+  <div class="two">
+    <div>
+      <h3>What the peak costs</h3>
+      <figure class="map"><a href="figures/nb_map_peak_cost.png"><img src="figures/nb_map_peak_cost.png" alt="Map of extra minutes per kilometre at the peak" loading="lazy"></a></figure>
+      <ul class="takeaways red">
+        <li><b>The peak adds about 1 minute to every kilometre</b> on the median road.</li>
+        <li><b>6% of roads lose 5 minutes or more per kilometre,</b> mainly around Rohini and Punjabi Bagh, on the airport road and near Nehru Place.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Distance from the centre</h3>
+      <figure><a href="figures/nb_speed_by_distance.png"><img src="figures/nb_speed_by_distance.png" alt="Median bus speed by distance from Connaught Place" loading="lazy"></a></figure>
+      <ul class="takeaways">
+        <li><b>At the peak, buses crawl at about 8 km/h almost everywhere within 19 km of Connaught Place.</b> Congestion is not just a city-centre problem.</li>
+        <li><b>Beyond about 19 km, peak speeds roughly double.</b></li>
+        <li><b>Late at night, speeds are 20 to 28 km/h almost everywhere.</b></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="slowest">
+  <h2><span class="num">03</span>The slowest stretches</h2>
+  <p class="intro">Buses were matched to the stops they passed, and the time between consecutive stops was measured. Each stretch below is at least 250 m long and was travelled by at least 10 buses.</p>
+  <figure><a href="figures/nb_slowest_stretches.png"><img src="figures/nb_slowest_stretches.png" alt="Map and ranking of the slowest stop-to-stop stretches" loading="lazy"></a></figure>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Stretch</th><th class="r">Length</th><th class="r">Median time</th><th class="r">Median speed</th></tr></thead>
+    <tbody>
+      <tr><td>ISBT Anand Vihar to Maharaj Pur Check Post</td><td class="r">264 m</td><td class="r">7.1 min</td><td class="r">2.2 km/h</td></tr>
+      <tr><td>Maharaj Pur Check Post to Gazipur Depot</td><td class="r">258 m</td><td class="r">6.3 min</td><td class="r">2.4 km/h</td></tr>
+      <tr><td>Mahipal Pur Crossing to Mahipal Pur Village (NH-48)</td><td class="r">361 m</td><td class="r">6.8 min</td><td class="r">3.2 km/h</td></tr>
+      <tr><td>Tilak Nagar Crossing to Tilak Nagar Terminal</td><td class="r">293 m</td><td class="r">5.3 min</td><td class="r">3.3 km/h</td></tr>
+      <tr><td>Moti Nagar Industrial Area to ESI Dispensary</td><td class="r">380 m</td><td class="r">6.5 min</td><td class="r">3.5 km/h</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="takeaways red">
+    <li><b>The two slowest stretches are on the Uttar Pradesh border</b> at Anand Vihar and Gazipur.</li>
+    <li><b>Mahipalpur on the airport road is third.</b></li>
+    <li><b>Several slow stretches end at a depot or terminal,</b> so part of their time is queuing to enter.</li>
+  </ul>
+</section>
+
+<section id="bunching">
+  <h2><span class="num">04</span>Bunching</h2>
+  <p class="intro">A bus is bunched when it reaches a stop within 2 minutes of the previous bus on the same route. Passengers then wait longer for the bus after that.</p>
+
+  <div class="howto"><b>How to read the chart below:</b> time runs left to right, and each blue line is one bus moving up the route. Evenly spaced lines would mean even service. Red dots mark buses arriving within 2 minutes of the bus ahead.</div>
+  <figure><a href="figures/nb_bunching_time_space.png"><img src="figures/nb_bunching_time_space.png" alt="Time-space diagram of buses on route 185A" loading="lazy"></a></figure>
+  <ul class="takeaways amber">
+    <li><b>Around 7 pm, buses on route 185A arrive in clusters.</b> At CV Raman ITI, four buses came within 3 minutes. The next bus took 6 minutes, and the one after that 16 minutes.</li>
+  </ul>
+
+  <h3>Across the whole city</h3>
+  <figure><a href="figures/nb_headway_zones.png"><img src="figures/nb_headway_zones.png" alt="Distribution of gaps between buses of the same route" loading="lazy"></a></figure>
+  <figure><a href="figures/nb_route_reliability.png"><img src="figures/nb_route_reliability.png" alt="Irregularity of gaps by route" loading="lazy"></a></figure>
+  <ul class="takeaways amber">
+    <li><b>One gap in eight is under 2 minutes,</b> across 315,366 gaps at stops.</li>
+    <li><b>41% of routes are as irregular as random arrivals, or worse.</b></li>
+    <li><b>Frequent routes are the most irregular,</b> because buses close together catch up with each other most easily.</li>
+  </ul>
+</section>
+
+<section id="prediction">
+  <h2><span class="num">05</span>Predicting arrival times</h2>
+  <p class="intro">When a bus reaches a stop, how long until it reaches each of its next 1 to 10 stops? With one evening of data, three methods were compared in three different tests.</p>
+
+  <div class="table-wrap"><table>
+    <thead><tr><th>Test</th><th>How it splits the data</th><th class="r">Historical median</th><th class="r">Own recent speed</th><th class="r">LightGBM</th><th class="r">Gain</th></tr></thead>
+    <tbody>
+      <tr><td>Same hours</td><td>Alternate 30-minute blocks</td><td class="r">99 s</td><td class="r">238 s</td><td class="r best">85 s</td><td class="r">14%</td></tr>
+      <tr><td>Unseen routes</td><td>A quarter of routes held out</td><td class="r">152 s</td><td class="r">303 s</td><td class="r best">115 s</td><td class="r">24%</td></tr>
+      <tr><td>Later evening</td><td>Train early, test late</td><td class="r">156 s</td><td class="r">189 s</td><td class="r best">90 s</td><td class="r">42%</td></tr>
+    </tbody>
+  </table></div>
+  <p style="color: var(--muted); font-size: 14px; margin-top: -4px">Mean absolute error in seconds. Gain is LightGBM's improvement on the best other method.</p>
+
+  <figure><a href="figures/nb_eta_results.png"><img src="figures/nb_eta_results.png" alt="Arrival-time error by test and by stops ahead" loading="lazy"></a></figure>
+  <ul class="takeaways">
+    <li><b>The fair comparison is the same-hours test:</b> LightGBM is 14% more accurate than history.</li>
+    <li><b>On routes it has never seen, it is 24% more accurate,</b> because it learns general patterns rather than memorising routes.</li>
+    <li><b>The 42% in the later-evening test is flattering,</b> because history from the 6 pm peak is a poor guide to lighter late-night traffic.</li>
+    <li><b>Ten stops ahead,</b> LightGBM is off by about 2.8 minutes, against about 5.1 minutes for history.</li>
+  </ul>
+  <figure><a href="figures/nb_eta_features.png"><img src="figures/nb_eta_features.png" alt="Feature importance of the arrival-time model" loading="lazy"></a></figure>
+  <ul class="takeaways">
+    <li><b>Distance and the starting stop carry about two-thirds of the model's gain.</b> The live speed of buses ahead adds 5%.</li>
+    <li><b>A bus's own recent speed adds almost nothing.</b> How fast it has been going says little about the road ahead.</li>
+  </ul>
+</section>
+
+<section id="since-2023">
+  <h2><span class="num">06</span>What changed since the 2023 timetable</h2>
+  <p class="intro">The live feed's route numbers do not match the last public timetable, from early 2023. Routes were rebuilt from where buses actually went, then matched to 2023 routes by their stops. The snapshots are three and a half years apart, so differences show change, not service failures.</p>
+
+  <figure><a href="figures/nb_timetable_ratio.png"><img src="figures/nb_timetable_ratio.png" alt="Observed stop-to-stop times as a share of timetable times by hour" loading="lazy"></a></figure>
+  <ul class="takeaways red">
+    <li><b>At the 6 pm peak, the timetable is close on average,</b> but 46% of trips take longer than it says.</li>
+    <li><b>After midnight, buses take half the time the timetable shows.</b> An app using it would be wrong in both directions.</li>
+  </ul>
+
+  <figure><a href="figures/nb_planned_vs_observed.png"><img src="figures/nb_planned_vs_observed.png" alt="Planned 2023 trips against observed 2026 trips on matched routes" loading="lazy"></a></figure>
+  <ul class="takeaways green">
+    <li><b>368 live routes match a 2023 route strongly.</b> Their route numbers changed after 2023.</li>
+    <li><b>Matched routes ran 2,759 evening trips against 2,243 planned in 2023, or 23% more.</b> Individual routes vary widely, probably because some were merged, split or renumbered.</li>
+  </ul>
+
+  <div class="two">
+    <figure class="map"><a href="figures/nb_map_network_change.png"><img src="figures/nb_map_network_change.png" alt="Map of 2023 stops served and new bus corridors" loading="lazy"></a></figure>
+    <div>
+      <ul class="takeaways">
+        <li><b>87% of 2023 stop locations still saw buses,</b> so the network covers largely the same ground.</li>
+        <li><b>Stops not passed (red) cluster in central and south Delhi.</b> They may have moved, closed or had no evening service.</li>
+        <li><b>Blue areas are bus roads far from any 2023 stop,</b> including corridors towards Ghaziabad and Sonipat. These may be new routes.</li>
+      </ul>
+      <figure><a href="figures/nb_fleet_mix.png"><img src="figures/nb_fleet_mix.png" alt="Registration series of buses in the feed" loading="lazy"></a></figure>
+      <ul class="takeaways green">
+        <li><b>About one bus in five carries a DL51EV plate,</b> a series that suggests electric buses. This was not checked against an official fleet list.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="method">
+  <h2><span class="num">07</span>How it was done</h2>
+  <p class="intro">The full pipeline is in the repository's <code>scripts</code> folder, and the notebook reproduces every chart in this report.</p>
+  <div class="steps">
+    <div class="step"><b>Collect</b><span>Polled the GTFS-Realtime vehicle-position feed every 10 seconds for six hours, keeping only positions that changed.</span></div>
+    <div class="step"><b>Clean</b><span>Removed duplicate and stale positions, GPS jumps over 80 km/h and buses parked for 5 minutes or more. Speed was computed from consecutive positions.</span></div>
+    <div class="step"><b>Match stops</b><span>Merged duplicate 2023 stop records into 5,319 stop locations and detected 483,177 stop passages, checking the bus was heading the right way.</span></div>
+    <div class="step"><b>Rebuild routes</b><span>Ordered each live route's stops by median time since the trip started, giving 1,421 routes with a median of 31 stops.</span></div>
+    <div class="step"><b>Measure</b><span>Computed stop-to-stop times, road speeds on a 45 to 110 m grid and gaps between buses of the same route.</span></div>
+    <div class="step"><b>Model</b><span>Trained LightGBM on 1.3 million arrival examples and tested it three ways against two simple baselines.</span></div>
+  </div>
+
+  <h3>Limitations</h3>
+  <ul class="takeaways">
+    <li><b>One weekday evening only.</b> There is no morning peak, weekend or day-to-day comparison.</li>
+    <li><b>Straight-line distances</b> between stops slightly understate road speeds.</li>
+    <li><b>Stop locations come from 2023,</b> so stops added since then are missed.</li>
+    <li><b>Route names are inferred</b> for the 368 strongly matched routes only.</li>
+  </ul>
+</section>
+
+</main>
+
+<footer>
+  <div class="inner">
+    <div><b>Rishabh Jain</b> &nbsp;|&nbsp; <a href="https://github.com/rishabhjain9196/how-Delhi-buses-move">Code and notebook on GitHub</a></div>
+    <div>Bus data: Department of Transport, Government of NCT of Delhi, and IIIT-Delhi, through <a href="https://otd.delhi.gov.in/">Delhi Open Transit Data</a>, used under the portal's <a href="https://otd.delhi.gov.in/static/assets/terms-and-conditions.pdf">terms</a>. Raw data is not redistributed.</div>
+    <div>2023 timetable: Delhi bus GTFS archived by Transitland and Mobility Database. Basemaps: Esri, HERE, Garmin and OpenStreetMap contributors.</div>
+  </div>
+</footer>
+
+</body>
+</html>

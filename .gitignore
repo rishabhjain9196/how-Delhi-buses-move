@@ -1,0 +1,15 @@
+# Ignore all data. The source terms do not clearly allow republishing raw files.
+data/*
+!data/README.md
+
+# Secrets
+.env
+*.key
+
+# Python
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+
+# Editor settings
+.vscode/

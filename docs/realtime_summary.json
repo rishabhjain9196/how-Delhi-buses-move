@@ -1,0 +1,124 @@
+{
+  "steps": 3626697,
+  "buses": 6013,
+  "time_span": [
+    "2026-10-21 18:19:38+05:30",
+    "2026-10-22 00:23:03+05:30"
+  ],
+  "median_speed_kmh": 13.7,
+  "share_steps_below_5_kmh": 0.296,
+  "cells_mapped": 4226,
+  "by_hour": [
+    {
+      "hour": "18:00",
+      "median_kmh": 8.6,
+      "mean_kmh": 13.0,
+      "buses": 5608,
+      "steps": 574713
+    },
+    {
+      "hour": "19:00",
+      "median_kmh": 9.4,
+      "mean_kmh": 13.7,
+      "buses": 5676,
+      "steps": 888646
+    },
+    {
+      "hour": "20:00",
+      "median_kmh": 12.4,
+      "mean_kmh": 15.4,
+      "buses": 5537,
+      "steps": 822852
+    },
+    {
+      "hour": "21:00",
+      "median_kmh": 17.0,
+      "mean_kmh": 18.1,
+      "buses": 4978,
+      "steps": 697699
+    },
+    {
+      "hour": "22:00",
+      "median_kmh": 22.1,
+      "mean_kmh": 21.4,
+      "buses": 3586,
+      "steps": 440146
+    },
+    {
+      "hour": "23:00",
+      "median_kmh": 24.9,
+      "mean_kmh": 23.1,
+      "buses": 1965,
+      "steps": 177771
+    },
+    {
+      "hour": "00:00",
+      "median_kmh": 26.2,
+      "mean_kmh": 23.6,
+      "buses": 748,
+      "steps": 24870
+    }
+  ],
+  "slowest_cells": [
+    {
+      "lat": 28.806,
+      "lon": 77.074,
+      "median_kmh": 0.0,
+      "buses": 12
+    },
+    {
+      "lat": 28.622,
+      "lon": 76.93,
+      "median_kmh": 0.0125,
+      "buses": 27
+    },
+    {
+      "lat": 28.578,
+      "lon": 77.234,
+      "median_kmh": 1.6198,
+      "buses": 42
+    },
+    {
+      "lat": 28.634,
+      "lon": 77.022,
+      "median_kmh": 1.7282,
+      "buses": 15
+    },
+    {
+      "lat": 28.638,
+      "lon": 77.226,
+      "median_kmh": 1.9107,
+      "buses": 234
+    },
+    {
+      "lat": 28.574,
+      "lon": 77.166,
+      "median_kmh": 1.964,
+      "buses": 51
+    },
+    {
+      "lat": 28.602,
+      "lon": 77.134,
+      "median_kmh": 2.0746,
+      "buses": 176
+    },
+    {
+      "lat": 28.586,
+      "lon": 77.314,
+      "median_kmh": 2.1996,
+      "buses": 11
+    },
+    {
+      "lat": 28.634,
+      "lon": 77.026,
+      "median_kmh": 2.2133,
+      "buses": 23
+    },
+    {
+      "lat": 28.602,
+      "lon": 77.35,
+      "median_kmh": 2.2551,
+      "buses": 19
+    }
+  ]
+}

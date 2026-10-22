@@ -1,0 +1,73 @@
+{
+  "routes": 2964,
+  "routes_by_agency": {
+    "DIMTS": 1964,
+    "DTC": 1000
+  },
+  "route_names_without_direction": 1312,
+  "stops": 6342,
+  "stops_never_served": 75,
+  "trips": 78515,
+  "stop_times": 3276092,
+  "implied_speed_kmh_p1_p50_p99": [
+    14.78,
+    15.01,
+    15.25
+  ],
+  "zero_time_segments": 30025,
+  "stop_spacing_m_p50_p95_max": [
+    475.0,
+    1244.0,
+    37076.0
+  ],
+  "trips_per_route_p25_p50_p75_max": [
+    8.0,
+    18.0,
+    34.0,
+    170.0
+  ],
+  "routes_with_regular_headways": 126,
+  "routes_with_headway_data": 2759,
+  "busiest_stops": [
+    {
+      "stop": "Jahangir Puri Metro Station",
+      "visits_per_day": 5591
+    },
+    {
+      "stop": "Anand Vihar ISBT Main Road",
+      "visits_per_day": 4865
+    },
+    {
+      "stop": "Adarsh Nagar / Bharola Village",
+      "visits_per_day": 4699
+    },
+    {
+      "stop": "Super Bazar",
+      "visits_per_day": 4622
+    },
+    {
+      "stop": "Guru Govind Singh University (Kashmere Gate)",
+      "visits_per_day": 4502
+    },
+    {
+      "stop": "ISBT Nityanand Marg",
+      "visits_per_day": 4420
+    },
+    {
+      "stop": "GPO",
+      "visits_per_day": 4397
+    },
+    {
+      "stop": "Najafgarh Delhi Gate",
+      "visits_per_day": 4366
+    },
+    {
+      "stop": "Police Station Najafgarh",
+      "visits_per_day": 4339
+    },
+    {
+      "stop": "ISBT Kashmere Gate (Lothian Road)",
+      "visits_per_day": 4306
+    }
+  ]
+}

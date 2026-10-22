@@ -1,0 +1,155 @@
+{
+  "live_routes": 1421,
+  "match_tiers": {
+    "partial": 798,
+    "strong": 368,
+    "none": 255
+  },
+  "share_of_live_quantiles": [
+    0.54,
+    0.66,
+    0.76
+  ],
+  "best_matches": [
+    {
+      "live_route": "1600",
+      "route_long_name": "145UP",
+      "share_of_live": 0.9,
+      "share_of_2023": 0.97,
+      "jaccard": 0.88
+    },
+    {
+      "live_route": "448",
+      "route_long_name": "359UP",
+      "share_of_live": 0.97,
+      "share_of_2023": 0.88,
+      "jaccard": 0.85
+    },
+    {
+      "live_route": "1925",
+      "route_long_name": "428DOWN",
+      "share_of_live": 0.94,
+      "share_of_2023": 0.89,
+      "jaccard": 0.84
+    },
+    {
+      "live_route": "1808",
+      "route_long_name": "318UP",
+      "share_of_live": 0.88,
+      "share_of_2023": 0.95,
+      "jaccard": 0.83
+    },
+    {
+      "live_route": "3674",
+      "route_long_name": "548CLUP",
+      "share_of_live": 0.93,
+      "share_of_2023": 0.89,
+      "jaccard": 0.83
+    },
+    {
+      "live_route": "342",
+      "route_long_name": "237DOWN",
+      "share_of_live": 0.89,
+      "share_of_2023": 0.92,
+      "jaccard": 0.83
+    },
+    {
+      "live_route": "414",
+      "route_long_name": "320UP",
+      "share_of_live": 0.87,
+      "share_of_2023": 0.94,
+      "jaccard": 0.82
+    },
+    {
+      "live_route": "3441",
+      "route_long_name": "434STLDOWN",
+      "share_of_live": 0.82,
+      "share_of_2023": 1.0,
+      "jaccard": 0.82
+    },
+    {
+      "live_route": "2342",
+      "route_long_name": "85BEXTUP",
+      "share_of_live": 0.82,
+      "share_of_2023": 1.0,
+      "jaccard": 0.82
+    },
+    {
+      "live_route": "786",
+      "route_long_name": "775EDOWN",
+      "share_of_live": 0.89,
+      "share_of_2023": 0.89,
+      "jaccard": 0.81
+    }
+  ],
+  "timetable_pairs_compared": 4967,
+  "timetable_traversals_compared": 174844,
+  "timetable_ratio_by_hour": [
+    {
+      "hour": 18,
+      "median_ratio": 0.95,
+      "share_slower": 0.46,
+      "traversals": 23371
+    },
+    {
+      "hour": 19,
+      "median_ratio": 0.9,
+      "share_slower": 0.43,
+      "traversals": 37403
+    },
+    {
+      "hour": 20,
+      "median_ratio": 0.81,
+      "share_slower": 0.36,
+      "traversals": 39329
+    },
+    {
+      "hour": 21,
+      "median_ratio": 0.7,
+      "share_slower": 0.26,
+      "traversals": 37005
+    },
+    {
+      "hour": 22,
+      "median_ratio": 0.6,
+      "share_slower": 0.16,
+      "traversals": 26361
+    },
+    {
+      "hour": 23,
+      "median_ratio": 0.54,
+      "share_slower": 0.1,
+      "traversals": 10048
+    },
+    {
+      "hour": 0,
+      "median_ratio": 0.49,
+      "share_slower": 0.09,
+      "traversals": 1327
+    }
+  ],
+  "timetable_ratio_overall": 0.75,
+  "frequency_routes": 290,
+  "frequency_ratio_quantiles": [
+    0.6,
+    1.08,
+    2.12
+  ],
+  "frequency_totals": {
+    "planned_2023": 2243,
+    "observed_2026": 2759
+  },
+  "frequency_share_below_half": 0.179,
+  "frequency_share_above_plan": 0.51,
+  "stops_2023_clusters": 5319,
+  "stops_passed_by_3_buses": 4636,
+  "bus_cells": 3920,
+  "bus_cells_far_from_2023_stops": 532,
+  "plate_series": {
+    "DL1PD": 4144,
+    "DL51EV": 1157,
+    "DL51GD": 646,
+    "DL1PE": 118
+  },
+  "buses": 6065
+}
