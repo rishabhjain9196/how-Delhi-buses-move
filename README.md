@@ -1,4 +1,4 @@
-# How Delhi's Buses Move
+# How Delhi Buses Move in 2026
 
 Six hours of live GPS from more than 6,000 Delhi city buses, turned into maps of busy and free roads, bunching patterns and an arrival-time model.
 
@@ -8,16 +8,24 @@ Six hours of live GPS from more than 6,000 Delhi city buses, turned into maps of
 
 ## Key findings
 
-The data covers Wednesday 21 October 2026, from 6:23 pm to 12:23 am.
+The collection runs from 18:23 IST on Wednesday 21 October 2026 to 00:23 IST on 22 October. It covers one evening, not the whole year.
 
 | Question | Answer |
 | --- | --- |
 | How fast are buses? | Median 8.6 km/h from 6 to 7 pm, rising to 25 km/h after 11 pm |
-| Where are roads busy? | At the peak, 45% of bus roads run below 15 km/h, against 14% late at night |
+| Where are roads busy? | At the peak, 45% of qualifying road-grid cells are below 15 km/h, against 14% late at night |
 | Which stretch is slowest? | ISBT Anand Vihar to Maharaj Pur Check Post, on the Uttar Pradesh border, at 2.2 km/h |
 | Do buses bunch? | One gap in eight between buses of the same route is under 2 minutes |
 | Can arrivals be predicted? | LightGBM beats the historical median by 14% on familiar routes and 24% on unseen routes |
-| What changed since 2023? | The 2023 timetable assumes a flat 15 km/h, and matched routes ran 23% more evening trips |
+| How does the 2023 archive compare? | The timetable assumes a flat 15 km/h. The 290-route frequency comparison contains 23% more observed evening trips, but it compares different snapshots. |
+
+## Interactive report
+
+- The [published report](https://rishabhjain9196.github.io/how-Delhi-buses-move/) contains nine interactive charts, including peak and late-night road maps, headway comparisons and arrival-model tests.
+- It explains the dataset, processing steps, libraries, evaluation design, operational implications and limitations. Every chart includes a data table and CSV download.
+- Open `docs/index.html` locally to read it without a collector or backend. Plotly.js 4.1.1 is bundled under the [MIT licence](docs/plotly-LICENSE.txt), and the interactive map makes no external tile requests.
+- After running the analysis pipeline, run `python scripts/export_report_data.py`. It reads retained trajectories, stop events, routes, polling counts and saved summaries. The optional `--steps` argument accepts a compatible usable-step Parquet file.
+- The exporter publishes aggregate grids and route statistics, not vehicle identifiers or individual positions.
 
 ## Repository layout
 
@@ -63,8 +71,8 @@ Then run the notebook from top to bottom.
 
 - **API key:** The collector needs a personal key from [Delhi Open Transit Data](https://otd.delhi.gov.in/data/realtime/), set as `OTD_API_KEY` or stored in a local `.env` file.
 - **Stop locations:** These come from the archived 2023 timetable. See [data/README.md](data/README.md) for how to get it.
-- **Basemaps:** Maps use Esri basemap tiles, which are downloaded once and cached in `data/cache/tiles/`.
-- **Older charts:** The analysis scripts also save simpler charts when run on their own. The report and notebook use the `nb_*` charts.
+- **Basemaps:** Notebook maps use Esri tiles, downloaded once and cached in `data/cache/tiles/`. The interactive road map uses the observed GPS grid instead.
+- **Saved charts:** The notebook uses the `nb_*` figures. The interactive report uses exported aggregates and includes a supporting saved time-space diagram.
 
 ## Data and credits
 
